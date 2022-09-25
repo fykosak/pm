@@ -1,0 +1,119 @@
+input fks
+verbatimtex
+%&latex
+\documentclass[9pt]{extarticle}
+\usepackage[utf8]{inputenc}
+\usepackage{fkssugar}
+\begin{document}
+etex
+
+prologues:=3;
+u:=1cm;
+
+beginfig(1);
+t:=2;
+s:=3;
+p:=0.2;
+pair O,A,B,C,D,E,F,G,H,I,J,K,L;
+
+%Sustava suradnic
+beta:=45;
+O:=(0,0);
+A=(0,s*u*1.5);
+B=(s*u,0);
+C=(cosd(beta)*s*u/2,sind(beta)*s*u/2);
+
+label.top(btex $z$ etex, A);
+label.top(btex $x$ etex, B);
+label.top(btex $y$ etex, C);
+
+def ostrSipka(expr A,B) =
+  begingroup
+    vektorTloust:=.75;    %tloustka cary sipky
+    spickaTloust:=.25;    %tloustka pera pro hlavicku sipky (cim mensi, tim ostrejsi)
+    interim ahlength :=5; %velikost hlavicky
+    interim ahangle  :=30; %vrcholovy puluhel
+    drawarrow A--B withpen pencircle scaled spickaTloust;
+    draw A--(B+.5*ahlength*unitvector(A-B)) withpen pencircle scaled vektorTloust;
+  endgroup;
+enddef;
+
+ostrSipka (O,A);
+ostrSipka (O,B);
+ostrSipka (O,C);
+
+%Valec
+D:=(B+(2.5u,6u));
+E:=D-(0,5.5u);
+F:=D+(-p*u*t/2,0);
+G:=D+(p*u*t/2,0);
+H:=E+(-p*u*t/2,0);
+I:=E+(p*u*t/2,0);
+J:=1/2[F,H];
+K:=J+(-3.5u,0);
+alfa:=51.84; %arctan()
+
+path p[];
+p[1] := fullcircle scaled (p*u);
+p[2] := halfcircle scaled (p*u);
+draw p[1] xscaled t yscaled (1/t) shifted D;
+draw F--H;
+draw G--I;
+draw p[2] xscaled t yscaled (1/t) shifted E dashed evenly;
+draw p[2] xscaled t yscaled (1/t) rotated 180 shifted E;
+
+label.rt (btex $\Phi$ etex, G);
+label.rt (btex $\Phi$ etex, I);
+
+draw J--K;
+label.top(btex $r$ etex,1/2[J,K]);
+draw K--F dashed evenly;
+draw K--H dashed evenly;
+ostrSipka(K,(K+(-sind(alfa)*u,-cosd(alfa)*u)));
+ostrSipka(K,(K+(sind(alfa)*u,-cosd(alfa)*u)));
+ostrSipka(K,(K+(-sind(alfa)*u+sind(alfa)*u,-cosd(alfa)*u-cosd(alfa)*u)));
+draw (K+(-sind(alfa)*u,-cosd(alfa)*u))--(K+(-sind(alfa)*u+sind(alfa)*u,-cosd(alfa)*u-cosd(alfa)*u)) dashed evenly;
+label.ulft(btex $R$ etex,1/2[F,K]);
+label.llft(btex $R$ etex,1/2[H,K]);
+draw (K+(sind(alfa)*u,-cosd(alfa)*u))--(K+(-sind(alfa)*u+sind(alfa)*u,-cosd(alfa)*u-cosd(alfa)*u)) dashed evenly;
+label.lrt (btex $\vec{B}$ etex, (K+(-sind(alfa)*u+sind(alfa)*u,-cosd(alfa)*u-cosd(alfa)*u)));
+label.urt (btex $\vec{B_1}$ etex, (K+(sind(alfa)*u,-cosd(alfa)*u)));
+label.ulft (btex $\vec{B_2}$ etex, (K+(-sind(alfa)*u,-cosd(alfa)*u)));
+
+def uhel(expr A,O,B,d) =
+  begingroup
+    ang:=angle(B-O) - angle(A-O);
+    if ang < 0: ang := ang + 360; fi;
+    draw (O + d*unitvector(A-O)) { d*unitvector(A-O) rotated 90 }
+         .. (O + d*unitvector(A-O) rotated (1/4*ang))
+         .. (O + d*unitvector(A-O) rotated (2/4*ang))
+         .. (O + d*unitvector(A-O) rotated (3/4*ang))
+         .. { d*unitvector(B-O) rotated 90 } (O + d*unitvector(B-O));
+  endgroup;
+enddef;
+
+uhel(K,F,J,0.5*u);
+uhel(J,H,K,0.5*u);
+label.ulft(btex $\alpha$ etex, (F+(0,-0.45*u)));
+label.llft(btex $\alpha$ etex, (H+(0,0.45*u)));
+uhel((K+(-sind(alfa)*u,-cosd(alfa)*u)),K,(K+(-sind(alfa)*u+sind(alfa)*u,-cosd(alfa)*u-cosd(alfa)*u)),0.25*u);
+uhel((K+(-sind(alfa)*u+sind(alfa)*u,-cosd(alfa)*u-cosd(alfa)*u)),K,(K+(sind(alfa)*u,-cosd(alfa)*u)),0.4*u);
+label.ulft(btex $\alpha$ etex, (K+(0,-0.5*u)));
+label.urt(btex $\alpha$ etex, (K+(0,-0.7*u)));
+
+%Magnet
+L:=1/2[D,E];
+draw (L+(0.125*u,0.5*u))--(L+(-0.125*u,0.5*u))--(L+(-0.125*u,-0.5*u))--(L+(0.125*u,-0.5*u))--cycle;
+label.bot(btex $+$ etex, (L+(0,0.5u)));
+label.top(btex $-$ etex, (L+(0,-0.5u)));
+
+ostrSipka(L+(0,1.5u),L+(0,2.5u));
+ostrSipka(L+(0,-2.5u),L+(0,-1.5u));
+endfig;
+
+
+verbatimtex
+\end{document}
+etex
+
+end;

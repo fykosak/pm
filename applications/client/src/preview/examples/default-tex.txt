@@ -1,0 +1,30 @@
+Matěj musí působit jednak proti tíze skleničky o~hmotnosti $M$, jednak proti hmotnosti napuštěné vody
+\eq{
+    \f{m}{t} = \int\limits_0^{t} \rho \f{Q}{t'} \d t'
+}
+a jednak proti hybnosti dopadajícího proudu vody $\f{F\_h}{t} = \rho \f{Q}{t} v$. Požadujeme, aby celková síla $F$ byla konstantní v~čase, což znamená
+\eq{
+    F = Mg + \rho g \int\limits_0^{t} \f{Q}{t'} \d t' + \rho v \f{Q}{t}\,.
+}
+Dostáváme
+\eq{
+    \f{Q}{t} = K~- \frac{g}{v} \int\limits_0^{t} \f{Q}{t'} \d t'\,, \lbl{R35S2U4_rce}
+}
+kde $K=\frac{F-Mg}{\rho v}$. Celou rovnici zderivujeme
+\eq{
+    \f{\dot{Q}}{t} = -\frac{g}{v} \f{Q}{t}\,,
+}
+což je velmi známá rovnice pro exponenciální rozpad, jejímž řešením je
+\eq{
+    \f{Q}{t} = K\eu^{-\frac{g}{v} t}\,,
+}
+kde $K$ je integrační konstanta, kterou jsme rovnou určili z~nezderivované rovnice \eqref{R35S2U4_rce} dosazením $t=0$. Hmotnost čaje v~plném hrnečku označíme $m_0$ a vyjádříme závislost hmotnosti načepovaného čaje na čase
+\eq{
+\f{m}{t} = \rho  K~\int\limits_0^{t} \eu^{-\frac{g}{v} t'} \d t' = \rho K~\frac{v}{g} \(1  - \eu^{-\frac{g}{v}t}\) = \(\frac{F}{g} - M\) \(1  - \eu^{-\frac{g}{v}t}\)\, .
+}
+V dalším kroku zjistíme dobu $t_0$, kterou bude trvat, než Matěj načepuje hmotnost $m_0 = \f{m}{t_0}$
+\eq{
+    m_0 = \(\frac{F}{g} - M\) \( 1  - \eu^{-\frac{g}{v}t_0}\) \ztoho t_0 = \frac{v}{g} \ln\( \frac{F-Mg}{F-Mg-m_0g}\) \,.
+}
+%\frac{m_0g}{F-Mg} &= 1 - \eu^{-\frac{g}{v}t_0}
+Všimněme si zajímavého faktu -- pokud chceme konstantní silou $F$ držet i plně načepovanou sklenici (tj. aby nám ruka se sklenicí nevystřelila nahoru, až zavřeme kohoutek), potřebujeme, aby platilo $F = \(M + m_0\)g$. Potom nám čepování čaje zabere nekonečný čas.

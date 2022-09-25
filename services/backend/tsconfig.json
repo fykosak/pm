@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "alwaysStrict": true,
+    "strictNullChecks": true,
+    "outDir": "dist",
+    "typeRoots": [
+      "./src/global.d.ts",
+      "./node_modules/@types"
+    ]
+  },
+  "include": ["src/**/*"]
+}

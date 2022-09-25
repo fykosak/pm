@@ -1,0 +1,8 @@
+set encoding utf8
+set ylabel "\\popi{v}{km.h^{-1}}"
+set xlabel "\\popi{l}{km}"
+set xrange [0:376.776] 
+set yrange [0:180] 
+set key center bottom
+plot "data.src.dat" using 1:2 w l t "rýchlostný profil", sin(x/30)*50+80
+show output

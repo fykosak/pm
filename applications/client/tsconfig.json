@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "alwaysStrict": true,
+    "strictNullChecks": true,
+    "typeRoots": [
+      "./src/parcel.d.ts",
+      "./node_modules/@types"
+    ],
+    "jsx": "react",
+  },
+  "include": ["src/**/*"]
+}
