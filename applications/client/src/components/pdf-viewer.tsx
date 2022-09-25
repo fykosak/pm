@@ -3,6 +3,11 @@ import {FC, useCallback, useEffect, useRef, useState} from "react";
 import {Document, Page} from "react-pdf/dist/esm/entry.parcel2";
 import {Container} from "@nextui-org/react";
 import * as styles from "./pdf-viewer.module.scss";
+import {pdfjs} from "react-pdf";
+
+// todo: fix issue with worker during parcel build
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.js`;
+
 
 const InnerPdf: FC<{
     pdf: any,
