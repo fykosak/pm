@@ -19,6 +19,7 @@ export const FksEmpty = () => {
 
     const [configurationMatrix, setConfigurationMatrix] = React.useState({
         language: "cs",
+        type: "empty" as "empty" | "serial",
     });
 
     const {result, run, abort, isRunning} = useAbortableOperation<{
@@ -59,7 +60,7 @@ export const FksEmpty = () => {
     return <Grid.Container gap={2} css={{}}>
         <Grid xs={6} direction={"column"} css={{gap: "$10", paddingTop: "$12"}}>
             <Div css={{display: "flex", justifyContent: "space-between", padding: "0 $10"}}>
-                <div>
+                <Div css={{display: "flex", gap: "$15"}}>
                     <Radio.Group
                         orientation="horizontal"
                         label="Jazyk dokumentu"
@@ -69,7 +70,16 @@ export const FksEmpty = () => {
                         <Radio value="cs">český</Radio>
                         <Radio value="en">anglický</Radio>
                     </Radio.Group>
-                </div>
+                    <Radio.Group
+                        orientation="horizontal"
+                        label="Typ"
+                        value={configurationMatrix.type}
+                        onChange={value => setConfigurationMatrix({...configurationMatrix, type: value as "empty" | "serial"})}
+                    >
+                        <Radio value="empty">prázdný</Radio>
+                        <Radio value="serial">seriál</Radio>
+                    </Radio.Group>
+                </Div>
                 <div>
                     <CompileButton isRunning={isRunning} run={run} abort={abort} />
                 </div>

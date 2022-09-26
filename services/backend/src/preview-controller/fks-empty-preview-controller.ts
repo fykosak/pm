@@ -1,6 +1,6 @@
 import {PreviewController} from "./preview-controller";
 import {Request, Response} from "express";
-import {FksEmptyJob} from "../job/fks-empty-job";
+import {FksEmptyJob, FksEmptyJobSupportedTypes} from "../job/fks-empty-job";
 import JSZip from "jszip";
 
 export class FksEmptyPreviewController extends PreviewController {
@@ -10,6 +10,9 @@ export class FksEmptyPreviewController extends PreviewController {
         job.setJobExecutor(this.jobExecutor);
         job.setTex(request.body.texSource as string);
         job.setLanguage(request.body.language as string ?? "cs");
+        if (request.body.type) {
+            job.setType(request.body.type as FksEmptyJobSupportedTypes);
+        }
         await job.execute();
 
         const zip = new JSZip();
