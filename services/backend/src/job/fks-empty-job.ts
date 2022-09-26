@@ -15,11 +15,12 @@ export class FksEmptyJob extends TexJob {
     }
 
     async prepare() {
-        let contents = `\\documentclass[${this.language !== "cs" ? "english" : ""}]{fksempty}\n` +
+        let contents = `\\documentclass[${this.language !== "cs" ? "english" : "czech"}]{fksempty}\n` +
             "\\usepackage[utf8]{inputenc}\n" +
             "\\begin{document}\n" +
-            this.tex +
-            "\n\\end{document}"
+            "\\input{source}\n" +
+            "\\end{document}"
         await fsp.writeFile(path.join(this.directory.path, "main.tex"), contents);
+        await fsp.writeFile(this.directory.getPath("source.tex"), this.tex);
     }
 }

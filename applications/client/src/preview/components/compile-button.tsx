@@ -7,7 +7,7 @@ export const CompileButton: FC<{
     run: () => void,
     abort: () => void,
 }> = ({isRunning, run, abort}) => {
-    return <Button onPress={isRunning ? abort : run} color={isRunning ? "error" : "default"}>
+    return <Button onPress={isRunning ? abort : run} color={isRunning ? "warning" : "default"}>
         {isRunning ? <>
             <Loading type="points" color="currentColor" size="sm" css={{mr: "$5 !important"}} />
             Zastavit

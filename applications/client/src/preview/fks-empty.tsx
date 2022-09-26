@@ -11,6 +11,8 @@ import {useCtrlS} from "../utils/use-ctrl-s";
 import {Div} from "../utils/empty";
 import {CompileButton} from "./components/compile-button";
 import {PreviewPane} from "./components/preview-pane";
+import {Log} from "../components/log-detail";
+import LatexParser from "../parser/latex-log-parser";
 
 export const FksEmpty = () => {
     const editor = useRef<{editor: monaco.editor.IStandaloneCodeEditor}>();
@@ -21,7 +23,8 @@ export const FksEmpty = () => {
 
     const {result, run, abort, isRunning} = useAbortableOperation<{
         file: ArrayBuffer | null,
-        log: string | null
+        log: string | null,
+        parsedLog: Log | null,
     }>(async (setResult, abortSignal) => {
         const resource = await fetch(`${process.env.BACKEND}/preview/fks-empty`,
             {
@@ -39,12 +42,17 @@ export const FksEmpty = () => {
 
         const zip = await (new JSZip().loadAsync(await resource.arrayBuffer()));
 
+        const log =  await zip.file("tex-log.txt")?.async("string") ?? null;
+
+        const parser = new LatexParser(log ?? "");
+        const parsedLog = parser.parse().all.filter(l => l.file === "./source.tex");
+
         setResult({
             file: await zip.file("result.pdf")?.async("arraybuffer") ?? null,
-            log: await zip.file("tex-log.txt")?.async("string") ?? null,
+            log,
+            parsedLog,
         });
     }, [configurationMatrix]);
-
     const ctrlS = useCtrlS();
     ctrlS.current = run;
 
@@ -71,6 +79,6 @@ export const FksEmpty = () => {
                 defaultValue={exampleSource}
             />
         </Grid>
-        <PreviewPane result={result} />
+        <PreviewPane result={result} hasParsedLog />
     </Grid.Container>
 }
