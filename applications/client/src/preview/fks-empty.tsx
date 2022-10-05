@@ -13,20 +13,29 @@ import {CompileButton} from "./components/compile-button";
 import {PreviewPane} from "./components/preview-pane";
 import {Log} from "../components/log-detail";
 import LatexParser from "../parser/latex-log-parser";
+import useLocalStorage from "../utils/use-local-storage";
 
 export const FksEmpty = () => {
     const editor = useRef<{editor: monaco.editor.IStandaloneCodeEditor}>();
 
-    const [configurationMatrix, setConfigurationMatrix] = React.useState({
-        language: "cs",
-        type: "empty" as "empty" | "serial",
-    });
+    const [configurationMatrix, setConfigurationMatrix] = useLocalStorage(
+        "preview/fks-empty/configuration-matrix",
+        {
+            language: "cs",
+            type: "empty" as "empty" | "serial",
+        });
+
+    const [editorDefaultValue, setEditorDefaultValue] = useLocalStorage(
+        "preview/fks-empty/source",
+        exampleSource
+    );
 
     const {result, run, abort, isRunning} = useAbortableOperation<{
         file: ArrayBuffer | null,
         log: string | null,
-        parsedLog: Log | null,
+        parsedLog: Log[] | null,
     }>(async (setResult, abortSignal) => {
+        setEditorDefaultValue(editor.current?.editor.getValue()!);
         const resource = await fetch(`${process.env.BACKEND}/preview/fks-empty`,
             {
                 method: 'POST',
@@ -86,7 +95,7 @@ export const FksEmpty = () => {
             </Div>
             <Editor
                 refs={editor}
-                defaultValue={exampleSource}
+                defaultValue={editorDefaultValue}
             />
         </Grid>
         <PreviewPane result={result} hasParsedLog />

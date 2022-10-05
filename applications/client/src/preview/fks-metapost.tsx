@@ -11,14 +11,21 @@ import {useCtrlS} from "../utils/use-ctrl-s";
 import {useAbortableOperation} from "../utils/use-abortable-operation";
 import {CompileButton} from "./components/compile-button";
 import {PreviewPane} from "./components/preview-pane";
+import useLocalStorage from "../utils/use-local-storage";
 
 export const FksMetapost = () => {
     const editor = useRef<{editor: monaco.editor.IStandaloneCodeEditor}>();
+
+    const [editorDefaultValue, setEditorDefaultValue] = useLocalStorage(
+        "preview/metapost/source",
+        exampleSource
+    );
 
     const {result, run, abort, isRunning} = useAbortableOperation<{
         file: ArrayBuffer | null,
         log: string | null
     }>(async (setResult, abortSignal) => {
+        setEditorDefaultValue(editor.current?.editor.getValue()!);
         const resource = await fetch(`${process.env.BACKEND}/preview/fks-metapost`,
             {
                 method: 'POST',
@@ -54,7 +61,7 @@ export const FksMetapost = () => {
             </Div>
             <Editor
                 refs={editor}
-                defaultValue={exampleSource}
+                defaultValue={editorDefaultValue}
             />
             <Card variant="flat" css={{overflow: "initial"}}>
                 <Card.Body>

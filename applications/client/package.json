@@ -2,7 +2,7 @@
   "name": "@pm/client",
   "source": "src/index.html",
   "scripts": {
-    "start": "parcel",
+    "start": "parcel --no-cache",
     "build": "parcel build"
   },
   "devDependencies": {

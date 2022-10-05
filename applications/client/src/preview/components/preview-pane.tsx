@@ -9,7 +9,7 @@ export const PreviewPane: FC<{
     result: {
         file: ArrayBuffer | null,
         log: string | null,
-        parsedLog?: Log | null,
+        parsedLog?: Log[] | null,
     } | null,
     hasParsedLog?: boolean,
 }> = ({result, hasParsedLog}) => {

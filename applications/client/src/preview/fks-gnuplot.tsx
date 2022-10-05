@@ -13,20 +13,35 @@ import {useCtrlS} from "../utils/use-ctrl-s";
 import {useAbortableOperation} from "../utils/use-abortable-operation";
 import {CompileButton} from "./components/compile-button";
 import {PreviewPane} from "./components/preview-pane";
+import useLocalStorage from "../utils/use-local-storage";
 
 export const FksGnuplot = () => {
     const editor = useRef<{editor: monaco.editor.IStandaloneCodeEditor}>();
     const dataEditor = useRef<{editor: monaco.editor.IStandaloneCodeEditor}>();
-    const dataFileName = useRef<HTMLInputElement>(null);
 
-    const [configurationMatrix, setConfigurationMatrix] = React.useState({
-        isColored: false,
-    });
+    const [editorDefaultValue, setEditorDefaultValue] = useLocalStorage(
+        "preview/gnuplot/source",
+        exampleSource
+    );
+
+    const [dataEditorDefaultValue, setDataEditorDefaultValue] = useLocalStorage(
+        "preview/gnuplot/data-source",
+        exampleSourceData
+    );
+
+    const [configurationMatrix, setConfigurationMatrix] = useLocalStorage(
+        "preview/gnuplot/configuration-matrix",
+        {
+            isColored: false,
+            dataFileName: "data.src.dat",
+        });
 
     const {result, run, abort, isRunning} = useAbortableOperation<{
         file: ArrayBuffer | null,
         log: string | null
     }>(async (setResult, abortSignal) => {
+        setEditorDefaultValue(editor.current?.editor.getValue()!);
+        setDataEditorDefaultValue(dataEditor.current?.editor.getValue()!);
         const resource = await fetch(`${process.env.BACKEND}/preview/fks-gnuplot`,
             {
                 method: 'POST',
@@ -35,7 +50,6 @@ export const FksGnuplot = () => {
                 },
                 body: JSON.stringify({
                     gnuplotSource: editor.current?.editor.getValue(),
-                    dataFileName: dataFileName.current?.value,
                     dataSource: dataEditor.current?.editor.getValue(),
                     ...configurationMatrix
                 }),
@@ -74,15 +88,19 @@ export const FksGnuplot = () => {
             </Div>
             <Editor
                 refs={editor}
-                defaultValue={exampleSource}
+                defaultValue={editorDefaultValue}
             />
             <Div css={{display: "flex", flexDirection: "row", justifyContent: "space-between", padding: "0 $10"}}>
                 <Text h3>Soubor s daty</Text>
-                <Input placeholder="Name" initialValue="data.src.dat" ref={dataFileName} />
+                <Input
+                    aria-label={"Název datového souboru"}
+                    value={configurationMatrix.dataFileName}
+                    onChange={e => setConfigurationMatrix({...configurationMatrix, dataFileName: e.target.value})}
+                />
             </Div>
             <Editor
                 refs={dataEditor}
-                defaultValue={exampleSourceData}
+                defaultValue={dataEditorDefaultValue}
             />
             <Card variant="flat" css={{overflow: "initial"}}>
                 <Card.Body>

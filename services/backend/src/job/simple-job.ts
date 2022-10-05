@@ -1,5 +1,4 @@
 import {Directory} from "../directory/directory";
-import {AbortPauseController} from "../abort-pause-controller";
 import {DoneContext, RunContext, Script, ScriptExecutor} from "../script-executor";
 
 /**
@@ -21,18 +20,18 @@ export abstract class SimpleJob {
 
     /**
      * Method that prepares the directory and runs the job.
-     * @param abortPauseController
+     * @param signal
      */
-    public async execute(abortPauseController?: AbortPauseController) {
-        await this.prepare(abortPauseController);
-        const execution = this.jobExecutor.schedule(this.getExecutionInfo());
+    public async execute(signal?: AbortSignal) {
+        await this.prepare(signal);
+        const execution = this.jobExecutor.schedule(this.getExecutionInfo(), signal);
         const runContext = await execution.untilRun();
         await this.onRunning(runContext);
         const doneContext = await execution.untilDone();
         await this.onDone(doneContext);
     }
 
-    protected async prepare(abortPauseController?: AbortPauseController) {}
+    protected async prepare(signal?: AbortSignal) {}
 
     /**
      * Called when the execution started

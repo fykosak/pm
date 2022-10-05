@@ -3,6 +3,7 @@ import {FC} from "react";
 import MonacoEditor from "@monaco-editor/react";
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import * as styles from "./editor.module.css";
+import { Div } from "../../utils/empty";
 
 function handleEditorWillMount(monaco) {
     monaco.editor.defineTheme('myCustomTheme', {
@@ -37,19 +38,21 @@ export const Editor: FC<{
     refs: React.MutableRefObject<{ editor: monaco.editor.IStandaloneCodeEditor } | undefined>,
     defaultValue: string,
 }> = (props) => {
-    return <MonacoEditor
-        onMount={editor => props.refs.current = {editor}}
-        className={styles.editor}
-        defaultLanguage="tex"
-        theme={"myCustomTheme"}
-        defaultValue={props.defaultValue}
-        beforeMount={handleEditorWillMount}
-        options={{
-            wordWrap: "on",
-            minimap: {
-                enabled: false
-            },
-            insertSpaces: false,
-        }}
-    />;
+    return <Div css={{flexGrow: 1, height: 0, display: "flex"}}>
+        <MonacoEditor
+            onMount={editor => props.refs.current = {editor}}
+            className={styles.editor}
+            defaultLanguage="tex"
+            theme={"myCustomTheme"}
+            defaultValue={props.defaultValue}
+            beforeMount={handleEditorWillMount}
+            options={{
+                wordWrap: "on",
+                minimap: {
+                    enabled: false
+                },
+                insertSpaces: false,
+            }}
+        />
+    </Div>;
 }

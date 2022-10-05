@@ -1,6 +1,5 @@
 import {spawn} from "child_process";
 import {Directory} from "./directory/directory";
-import {AbortPauseController} from "./abort-pause-controller";
 
 /**
  * Description on how to create a container for the script execution
@@ -46,7 +45,7 @@ export class ScriptExecutor {
     /**
      * Schedules and later executes the script.
      */
-    public schedule(script: Script, abortPauseController?: AbortPauseController): ScriptExecution {
+    public schedule(script: Script, signal?: AbortSignal): ScriptExecution {
         let run: Promise<RunContext>;
         const done = new Promise<DoneContext>((resolveDone, errorDone) => {
             run = new Promise(resolveRun => {
@@ -58,8 +57,13 @@ export class ScriptExecutor {
                         "--rm",
                         "-v", script.directory.path + ":" + script.mountPoint,
                         script.container,
-                    ]
+                    ],
+                    {
+                        signal
+                    }
                 );
+
+                signal?.addEventListener("abort", () => console.log("aborted"));
 
                 resolveRun({
                     output: child.stdout,
