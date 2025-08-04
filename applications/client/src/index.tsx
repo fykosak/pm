@@ -32,7 +32,7 @@ const App = () => {
                 <Navbar variant={"sticky"}>
                     <Navbar.Brand>
                         <Text b color="inherit" hideIn="xs">
-                            <Span css={{color: "$primary"}}>pm</Span>.fykos.cz
+                            <Span css={{color: "$primary"}}>tex</Span>.fykos.cz
                         </Text>
                     </Navbar.Brand>
                     <Navbar.Content variant={"highlight"}>
