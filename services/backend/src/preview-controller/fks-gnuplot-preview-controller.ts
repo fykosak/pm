@@ -8,6 +8,9 @@ export class FksGnuplotPreviewController extends PreviewController {
         const abortController = new AbortController();
         response.on("close", () => abortController.abort());
 
+        // Add safety timeout
+        setTimeout(() => abortController.abort(), 30_000);
+
         const directory = await this.directoryManager.create("preview", "fks-gnuplot");
 
         try {
@@ -17,7 +20,7 @@ export class FksGnuplotPreviewController extends PreviewController {
             job.setColored(request.body.isColored as boolean ?? false);
             job.setData(request.body.dataSource as string);
             job.setDataFileName(request.body.dataFileName as string);
-            await job.execute();
+            await job.execute(abortController.signal);
 
             const zip = new JSZip();
 

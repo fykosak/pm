@@ -8,13 +8,16 @@ export class FksMetapostPreviewController extends PreviewController {
         const abortController = new AbortController();
         response.on("close", () => abortController.abort());
 
+        // Add safety timeout
+        setTimeout(() => abortController.abort(), 30_000);
+
         const directory = await this.directoryManager.create("preview", "fks-metapost");
 
         try {
             const job = new FksMetapostJob(directory);
             job.setJobExecutor(this.jobExecutor);
             job.setData(request.body.metapostSource as string);
-            await job.execute();
+            await job.execute(abortController.signal);
 
             const zip = new JSZip();
 

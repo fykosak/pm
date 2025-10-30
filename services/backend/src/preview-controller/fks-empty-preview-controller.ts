@@ -8,6 +8,9 @@ export class FksEmptyPreviewController extends PreviewController {
         const abortController = new AbortController();
         response.on("close", () => abortController.abort());
 
+        // Add safety timeout
+        setTimeout(() => abortController.abort(), 60_000);
+
         const directory = await this.directoryManager.create("preview", "fks-empty");
 
         try {
