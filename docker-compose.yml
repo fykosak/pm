@@ -1,0 +1,57 @@
+services:
+  docker:
+    image: docker:29-dind
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: /certs
+    volumes:
+      - ./docker-data/containers:/var/lib/docker
+      - ./docker-data/files:/opt/pm
+      - ./docker-data/certs:/certs
+    healthcheck:
+      test: ["CMD", "docker", "info"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # Pull fykosak/buildtools on docker startup
+  docker-init:
+    image: docker:29-cli
+    environment:
+      DOCKER_HOST: tcp://docker:2376
+      DOCKER_TLS_VERIFY: 1
+      DOCKER_CERT_PATH: /certs/client
+    volumes:
+      - ./docker-data/certs:/certs:ro
+    depends_on:
+      docker:
+        condition: service_healthy
+    command: ["docker", "pull", "fykosak/buildtools"]
+    restart: "no"
+
+  backend:
+    build:
+      context: ./services/backend
+    environment:
+      PORT: 3000
+      DOCKER_HOST: tcp://docker:2376
+      DOCKER_TLS_VERIFY: 1
+      DOCKER_CERT_PATH: /certs/client
+    depends_on:
+      docker-init:
+        condition: service_completed_successfully
+    ports:
+      - "8081:3000"
+    volumes:
+      - ./docker-data/files:/opt/pm
+      - ./docker-data/certs:/certs:ro
+
+  frontend:
+    build:
+      context: ./applications/client
+      args:
+        BACKEND: http://localhost:8081
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"

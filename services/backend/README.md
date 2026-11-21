@@ -10,6 +10,6 @@ Required variables:
 - `PORT` - port on which the service will be listening
 
 ```dotenv
-DIRECTORY_ROOT=/tmp/pm
+DIRECTORY_ROOT=/opt/pm
 PORT=3000
 ```
